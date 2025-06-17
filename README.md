@@ -46,32 +46,32 @@ A domain-specific FAQ assistant that:
 - Improves guest experience with instant and reliable answers
 - Easily scalable to other hotels—just change the dataset and re-train
 
-Setup Instructions
-1. Fine-Tuning the Model
-Format your dataset as a .jsonl file (see faq_dataset.jsonl)
+## Setup Instructions
 
-Use OpenAI CLI to fine-tune GPT-4o:
+1. **Fine-Tuning the Model**
+   - Format your dataset as a `.jsonl` file (see `faq_dataset.jsonl`)
+   - Use the OpenAI CLI to fine-tune GPT-4o:
 
-bash
-Copy
-Edit
-openai api fine_tunes.create -t "faq_dataset.jsonl" -m gpt-4o
-2. Create Telegram Bot
-Talk to @BotFather
+     ```bash
+     openai api fine_tunes.create -t "faq_dataset.jsonl" -m gpt-4o
+     ```
 
-Set bot name, username, and get the bot token
+2. **Create Telegram Bot**
+   - Talk to [@BotFather](https://t.me/BotFather)
+   - Set your bot's name and username
+   - Copy the bot token and use it in your n8n workflow
 
-Use the token in your n8n workflow
+3. **Set Up n8n**
+   - Install n8n locally or use [n8n Cloud](https://n8n.io)
+   - Import the workflow file `n8n_workflow.json`
+   - Replace placeholder credentials with your:
+     - OpenAI API Key
+     - Telegram Bot Token
 
-3. Set Up n8n
-Install or use n8n Cloud
+4. **Run the Flow**
+   - Deploy the workflow
+   - Your Telegram bot will now respond to guest messages using the fine-tuned GPT-4o model
 
-Import the workflow (n8n_workflow.json)
-
-Replace API key and bot token with your values
-
-4. Run the Flow
-Your Telegram bot will now respond to guest messages using the fine-tuned model
 
 ## Contact
 
