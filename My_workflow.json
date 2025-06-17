@@ -1,0 +1,171 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5cfc4712-d49e-4e2f-bcde-cd5c113a54d0",
+      "name": "Telegram Trigger",
+      "webhookId": "98504ed2-e1f2-4466-a496-619ed41f97b5",
+      "notesInFlow": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "fOsOSkvMYz93rpCw",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        0
+      ],
+      "id": "7637fb7a-d276-4694-8331-8742ed2722e4",
+      "name": "Telegram",
+      "webhookId": "4b377e33-0f8f-4be0-b799-a97f8a643848",
+      "credentials": {
+        "telegramApi": {
+          "id": "fOsOSkvMYz93rpCw",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are a hotel assistant for Narayani Heights. Only answer questions using the information from the fine-tuned dataset. Do not make assumptions. If the answer is not in the dataset, respond with: 'Sorry, I don’t have that information.' Keep your answers short and accurate. Do not add any additional details or general hotel knowledge.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        260,
+        40
+      ],
+      "id": "06b942c2-cc47-4ee3-b305-8a8033dbb6b5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "ft:gpt-4o-2024-08-06:phazeai:hotel-faq-bot:BjOpXOtt",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        240
+      ],
+      "id": "32edfe87-be18-4d0b-936b-bd5d5007ab66",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zxJVQr2dPJnBJtLp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        360,
+        280
+      ],
+      "id": "97631a44-4468-4b07-bc8d-77f4d5394ab2",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c7e9e6e4-8620-4606-a0b3-2a03c9a95ab0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "652149e876a8130cd1f892c526c2492a237c5d3071059247b1025b157ca0efb7"
+  },
+  "id": "eoDysu1FEyH3tbK0",
+  "tags": []
+}
